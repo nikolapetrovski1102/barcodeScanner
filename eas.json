@@ -19,6 +19,13 @@
     "preview4": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "ios": {
+        "workflow": "managed"
+      },
+      "android": {
+        "workflow": "managed"
+      }
+    }
   }
 }
