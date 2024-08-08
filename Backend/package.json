@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "track of products",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikolapetrovski1102/hempromak_software.git"
+  },
+  "author": "Nikola Petrovski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikolapetrovski1102/hempromak_software/issues"
+  },
+  "homepage": "https://github.com/nikolapetrovski1102/hempromak_software#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
