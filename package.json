@@ -4,7 +4,7 @@
     "description": "track of products",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
-      "back": "cd Backend && nodemon index.js",
+      "back": "cd Backend && php artisan serve",
       "front": "cd Frontend-web && cd hempromak-web && npm start"
     },
     "repository": {
