@@ -3,14 +3,17 @@
     "version": "1.0.0",
     "description": "track of products",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "back": "cd Backend && php artisan serve",
-      "front": "cd Frontend-web && cd hempromak-web && npm start"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "back": "cd Backend && php artisan serve",
+        "front": "cd Frontend-web && npm start"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/nikolapetrovski1102/hempromak_software.git"
+        "type": "git",
+        "url": "git+https://github.com/nikolapetrovski1102/hempromak_software.git"
     },
     "author": "Nikola Petrovski",
-    "license": "ISC"
-}  
+    "license": "ISC",
+    "devDependencies": {
+        "ajv": "^7.2.4"
+    }
+}

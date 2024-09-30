@@ -9,129 +9,141 @@
         die("Connection failed: " . $con->connect_error);
     }
     
-    $excel_file = SimpleXLSX::parse('./ExcelData/Adapteri-nipli.xlsx');
+    $directory = './ExcelData/';
+    $files = glob($directory . '*.xlsx');
+    $file_name_type = '';
 
-    $prefix_table = '';
-    $table = '';
+    // $excel_file = SimpleXLSX::parse('./ExcelData/Adapteri-nipli.xlsx');
 
-    $excel = $excel_file->rows();
+    if ($files) {
+        foreach ($files as $file) {
+            $file_name = basename($file);
 
-    foreach ($excel as $row ){
+            $excel_file = SimpleXLSX::parse($file);
+    
+            if ($excel_file) {
+                $table = str_replace('-', '_', $file_name);
+                $table = str_replace(' ', '_', $table);
+                $table = explode('.', $table)[0];
 
-        if (empty($row[1]) && !empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) ){
-            $prefix_table = '';
-            $prefix_table = str_replace(' ', '_', $row[2]);
-            $prefix_table = str_replace('-', '_', $prefix_table);
+                $check_table_query = "SHOW TABLES LIKE '$table'";
 
-            $check_table_query = "SHOW TABLES LIKE '$prefix_table'";
+                    $result = $con->query($check_table_query);
 
-            $result = $con->query($check_table_query);
+                    if (mysqli_num_rows($result) <= 0){
+                        $create_table_query = 
+                            "CREATE TABLE $table (
+                                sifra INT NOT NULL PRIMARY KEY,
+                                head_type VARCHAR(200) NOT NULL,
+                                type VARCHAR(200) NOT NULL
+                            );";
 
-            if (mysqli_num_rows($result) <= 0){
-                $create_table_query = "
-                    CREATE TABLE $prefix_table (
-                        sifra INT NOT NULL PRIMARY KEY,
-                        opis VARCHAR(255) NULL,
-                        kom VARCHAR(255) NULL,
-                        quantity INT NOT NULL
-                    );
-                ";
+                    if ($con->query($create_table_query) === TRUE){
+                        echo '<br> Created new table ' . $table . '<br>';
+                    }
+                    else
+                        echo 'Error: ' . $create_table_query . '<br>' . $con->error;
 
-                if ($con->query($create_table_query) === TRUE){
-                    echo '<br> Created new table ' . $prefix_table . '<br>';
-                }
-                else
-                    echo 'Error: ' . $create_table_query . '<br>' . $con->error;
+                        $create_details_table_query = 
+                            "CREATE TABLE {$table}_details (
+                                sifra INT NOT NULL,
+                                cena FLOAT NOT NULL,
+                                komada VARCHAR(200) NULL,
+                                opis VARCHAR(255) NULL,
+                                FOREIGN KEY (sifra) REFERENCES $table(sifra) ON DELETE CASCADE
+                            );";
 
-                $create_table_query = "
-                    CREATE TABLE {$prefix_table}_details (
-                        sifra INT NOT NULL,
-                        cena INT NOT NULL,
-                        vrednost VARCHAR(200) NULL,
-                        FOREIGN KEY (sifra) REFERENCES $prefix_table(sifra) ON DELETE CASCADE
-                    );";
-                
-                if ($con->query($create_table_query) === TRUE)
-                    echo '<br> Created new table ' . $prefix_table . '_details<br>';
-                else
-                    echo 'Error: ' . $create_table_query . '<br>' . $con->error;
-
-            }
-
-
-        }
-    }
-
-    $counter_row = 0;
-    $quantity_counter = 0;
-    $prefix_table = '';
-    $query_row = "";
-
-    // [1] - opis
-    // [2] - kom
-    // [3] - sifra
-    // [4] - kom
-    // [5] - cena
-    // [6] - vrednost
-    foreach ($excel as $row ){
-        $counter_row++;
-
-        if ($counter_row == 5){
-            continue;
-        }
-
-        print_r('<pre>');
-        print_r($row);
-        print_r('</pre>');
-
-        if (empty($row[1]) && !empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) ){
-            $prefix_table = str_replace(' ', '_', $row[2]);
-            $prefix_table = str_replace('-', '_', $prefix_table);
-            echo $prefix_table . '<br>';
-        }
-
-        if (!empty($row[1]) && !empty($row[5]) && !empty($row[6])){
-            $quantity_counter = 0;
-            echo $prefix_table . '<br>';
-            $quantity_counter++;
-            if (empty($query_row)){
-                $query_row = "INSERT INTO $prefix_table (sifra, opis, kom, quantity) VALUES
-                    ($row[3], '$row[1]', '$row[2]', $quantity_counter);
-
-                INSERT INTO {$prefix_table}_details (sifra, cena, vrednost) VALUES
-                    ($row[3], $row[5], '$row[6]');
-                ";
-
-                mysqli_multi_query($con, $query_row);
-                do {
-                    if ($result = mysqli_store_result($con)) {
-                        while ($row = mysqli_fetch_row($result)) {
-                            printf("%s\n", $row[0]);
+                        if ($con->query($create_details_table_query) === TRUE){
+                            echo '<br> Created new table ' . $table . '_details <br>';
                         }
-                    }
-                    if (mysqli_more_results($con)) {
-                        printf("-----------------\n");
-                    }
-                } while (mysqli_next_result($con));
+                        else
+                            echo 'Error: ' . $create_details_table_query . '<br>' . $con->error;
 
 
-                $query_row = '';
+            } else {
+                echo "Failed to parse: " . $file_name . "<br>";
+            }
+
+            $head_type = '';
+
+            $excel = $excel_file->rows();
+
+            $counter_row = 0;
+            $prefix_table = '';
+            $query_row = "";
+            $type = '';
+            $opis = '';
+
+            // [1] - opis
+            // [2] - kom
+            // [3] - sifra
+            // [4] - komada
+            // [5] - cena
+            // [6] - vrednost
+            foreach ($excel as $row ){
+                $counter_row++;
+
+                if ($counter_row == 5 || empty($row)){
+                    continue;
+                }
+
+                if (empty($row[1]) && !empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) ){
+                    echo "<br> $head_type <br>";
+                    $head_type = $row[2];
+                }
+
+                if (!empty($row[1]) && empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) ){
+                    $type = $row[1];
+                }
+
+                if (!empty($row[1]) && !empty($row[3]) && !empty($row[4]) && !empty($row[5]) && $row[6] != '0.00'){
+                    $opis = str_replace(' ', '', $row[1]);
+                    
+                    if (empty($query_row)){
+                        $query_row = "INSERT IGNORE INTO $table (sifra, head_type, type) VALUES
+                            ($row[3], '$head_type', '$type');
+
+                        INSERT INTO {$table}_details (sifra, cena, komada, opis) VALUES
+                            ($row[3], $row[5], '$row[4]', '$opis');";
+
+                        echo '<br>';
+                        print_r($query_row);
+                        echo '<br>';
+
+                        mysqli_multi_query($con, $query_row);
+                        do {
+                            if ($result = mysqli_store_result($con)) {
+                                while ($row = mysqli_fetch_row($result)) {
+                                    printf("%s\n", $row[0]);
+                                }
+                            }
+                            if (mysqli_more_results($con)) {
+                                printf("-----------------\n");
+                            }
+                        } while (mysqli_next_result($con));
+
+
+                        $query_row = '';
+
+                    }
+                }
+
+                if (empty($row[1]) && !empty($row[5]) && !empty($row[6])){
+                    $query_details_row = "INSERT INTO {$table}_details (sifra, cena, komada, opis) VALUES
+                        ($row[3], $row[5], '$row[4]', '$opis');";
+
+                    if (!$con->query($query_details_row))
+                        echo 'Error: ' . $con->error;
+
+                }
+
+            }
 
             }
         }
 
-        if (empty($row[1]) && !empty($row[5]) && !empty($row[6])){
-            $query_details_row = "INSERT INTO {$prefix_table}_details (sifra, cena, vrednost) VALUES
-                ($row[3], $row[5], '$row[6]');";
-
-            if ($con->query($query_details_row)){
-                echo 'Added to details';
-            }
-            else{
-                echo 'Error: ' . $con->error;
-            }
-        }
-
+    } else {
+        echo "No Excel files found in the directory.";
     }
 
         // if ($row[0] != ''){

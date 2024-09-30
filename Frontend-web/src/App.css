@@ -1,0 +1,143 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#sider{
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px) ;
+}
+
+#menu-cards{
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  transition: box-shadow 0.4s ease-in-out;
+}
+
+#menu-cards:hover{
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+label{
+  opacity: .5;
+}
+
+label > span {
+  align-items: end;
+}
+
+.move_left {
+  animation-name: move_left;
+  animation-duration: .5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.move_right {
+  animation-name: move_right;
+  animation-duration: .5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes move_left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-25%);
+    opacity: 1;
+  }
+}
+
+@keyframes move_right {
+  0% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+.toggle_hide{
+  opacity: 0;
+  transition: opacity .3s linear;
+  pointer-events: none;
+}
+
+.toggle_show{
+  animation-name: opacity_show;
+  pointer-events: all;
+  animation-duration: .3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes opacity_show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#lists, #tabs {
+  transition: all .5s ease;
+}
+
+.hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.hide_alert{
+  display: none;
+  opacity: 0;
+  transition: opacity 3s linear; 
+  pointer-events: none;
+}
+
+.show_alert {
+  display: block;
+  opacity: 1;
+  transition: opacity .5s linear; 
+  pointer-events: all;
+}
+
