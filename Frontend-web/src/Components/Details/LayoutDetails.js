@@ -189,6 +189,7 @@ const MyList = () => {
         },
         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
         pageSize: listPageSize,
+        size: 'small'
       }}
       dataSource={data}
       renderItem={(item) => (

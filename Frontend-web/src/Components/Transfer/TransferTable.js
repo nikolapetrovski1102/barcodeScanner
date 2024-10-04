@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { Table, Input, InputNumber, Space, Form, Button, Row, Col, Modal, message, notification } from 'antd';
 import { stringify } from 'ajv';
 import Paragraph from 'antd/es/skeleton/Paragraph';
+import { calc } from 'antd/es/theme/internal';
 
 const { TextArea } = Input;
 
@@ -74,6 +75,7 @@ const Details = ({ item }) => {
     const [kupuva, setKupuva] = useState('');
     const [seriskiBroj, setSeriskiBroj] = useState('');
     const [komada, setKomada] = useState(1);
+    const [tableSize, setTableSize] = useState(7);
     
     const showMessage = () => {
       message.success('Success!');
@@ -124,6 +126,15 @@ const Details = ({ item }) => {
   
 
   useEffect(() => {
+    const handleResize = () => {
+      let table_cell = document.querySelector('.ant-table-cell').offsetHeight;
+      var calculatedHeight = document.querySelector('#content').offsetHeight - 450;
+      setTableSize(calculatedHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
       if (item) {
           const itemsArray = Array.isArray(item) ? item : [item];
 
@@ -303,7 +314,7 @@ const Details = ({ item }) => {
             </div>
         )}
         scroll={{
-          y: 60 * 7,
+          y: tableSize,
         }}
       />
       <Button type="dashed" onClick={() => handleAddRows()} style={{ marginRight: '1%' }} >
@@ -315,6 +326,7 @@ const Details = ({ item }) => {
       </div>
       {/* Form input */}
       <Modal
+        style={{ top: 20 }}
         title="Faktura"
         open={open}
         onOk={() => handleOnOkModal()}
@@ -406,7 +418,7 @@ const Details = ({ item }) => {
             </div>
         )}
         scroll={{
-          y: 60 * 7,
+          y: 50 * tableSize,
         }}
       />
       {/* End Table */}

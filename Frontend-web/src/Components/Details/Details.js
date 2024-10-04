@@ -93,7 +93,7 @@ const App = ({ item, onFormSubmit }) => {
     <Row>
     <Col span={cols} >
       <Form
-        wrapperCol={{ span: 20 }}
+        wrapperCol={{ span: 10 }}
         style={{
           padding: '1% 0 0 2%',
         }}
@@ -106,7 +106,7 @@ const App = ({ item, onFormSubmit }) => {
         }}
       >
         <Row 
-          style={{ paddingBottom: '5%' }}
+          style={{ paddingBottom: '0%' }}
         >
         <Col span={8}>
           <Button onClick={cancelEdit} style={dynamicForm.input} type="dashed" danger>
@@ -115,7 +115,7 @@ const App = ({ item, onFormSubmit }) => {
         </Col>
         <Col style={{ width: '100%', display: 'flex', justifyContent: 'right' }} span={12} >
           <EditFilled
-            style={{ fontSize: '1.2rem', padding: '2%' }}
+            style={{ fontSize: '1.2rem', padding: '0%' }}
             action="click"
             onClick={onEdit}
           />
@@ -124,7 +124,7 @@ const App = ({ item, onFormSubmit }) => {
         </Row>
 
       {/* Sifra */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Sifra">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Sifra">
         <span style={dynamicForm.span} >{items.sifra}</span>
         <Form.Item name="sifra" noStyle>
           <InputNumber style={dynamicForm.input} value={items.sifra} />
@@ -132,7 +132,7 @@ const App = ({ item, onFormSubmit }) => {
       </Form.Item>
 
       {/* Head Type */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Head type">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Head type">
         <span style={dynamicForm.span} >{items.head_type}</span>
         <Form.Item name="head_type" noStyle>
           <Input style={dynamicForm.input} type="text" value={items.head_type} />
@@ -140,7 +140,7 @@ const App = ({ item, onFormSubmit }) => {
       </Form.Item>
 
       {/* Type */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Type">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Type">
         <span style={dynamicForm.span} >{items.type}</span>
         <Form.Item name="type" noStyle>
           <Input style={dynamicForm.input} type="text" value={items.type} />
@@ -148,7 +148,7 @@ const App = ({ item, onFormSubmit }) => {
       </Form.Item>
 
       {/* Opis */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Opis">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Opis">
         <span style={dynamicForm.span} >{items.opis}</span>
         <Form.Item name="opis" noStyle>
           <Input style={dynamicForm.input} type="text" value={items.opis} />
@@ -157,10 +157,10 @@ const App = ({ item, onFormSubmit }) => {
 
       <Divider />
 
-      <p style={{ fontWeight: '300', fontSize: '1.5rem' }}>Prodazni Informacii</p>
+      <p style={{ fontWeight: '300', fontSize: '1.5rem', margin: '0% 0 1% 1%' }}>Prodazni Informacii</p>
 
       {/* Cena */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Cena">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Cena">
         <span style={dynamicForm.span} >{items.cena} MKD</span>
         <Form.Item name="cena" noStyle>
           <InputNumber style={dynamicForm.input} value={items.cena} />
@@ -168,7 +168,7 @@ const App = ({ item, onFormSubmit }) => {
       </Form.Item>
 
       {/* Komada */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Komada">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Komada">
         <span style={dynamicForm.span} >{items.komada}</span>
         <Form.Item name="komada" noStyle>
           <InputNumber style={dynamicForm.input} value={items.komada} />
@@ -176,7 +176,7 @@ const App = ({ item, onFormSubmit }) => {
       </Form.Item>
 
       {/* Total Komada */}
-      <Form.Item labelAlign="left" labelCol={{ span: 5 }} label="Total komada">
+      <Form.Item labelAlign="left" labelCol={{ span: 5 }} style={{ marginBottom: '10px' }} label="Total komada">
         <span >{items.komada * items.cena} MKD</span>
         <Form.Item name="total_komada" noStyle>
           <Input type="hidden" value={items.komada * items.cena} />

@@ -79,7 +79,7 @@ const App = ({ children, title }) => {
             height: '100vh',
           }}
         >
-          <Content style={{ margin: '0 16px', height: '100vh' }}>
+          <Content style={{ margin: '0 16px', height: '100vh', overflow: 'auto' }}>
             <div
               id='content'
               style={{
