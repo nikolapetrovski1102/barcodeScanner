@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { SearchOutlined } from '@ant-design/icons';
+import Notification from '../Notification'
 import { Button, Input, Space, Table, ConfigProvider, Form, Row, Col } from 'antd';
 import Highlighter from 'react-highlight-words';
+import 'antd/dist/reset.css';
 import Data from '../Data';
 import Paragraph from 'antd/es/skeleton/Paragraph';
 
@@ -22,8 +24,6 @@ const TableComponent = ({ element }) => {
   const [data, setData] = useState(Data);
 
   useEffect(() => {
-    console.log('In Table Component');
-    console.log('Record:', record);
 
     let table_cell_height = document.querySelector('.ant-table-cell').offsetHeight;
     let content_div_height = document.getElementById('content').offsetHeight - 285;
@@ -187,6 +187,7 @@ const TableComponent = ({ element }) => {
 
   return (
     <ConfigProvider theme={element}>
+      <Notification />
       <Row>
         <Col span={12} >
           <Form.Item>

@@ -10,6 +10,7 @@ import Layout from './Components/Layout/Layout';
 import Cards from './Components/Cards/Card';
 import TransactionHistoryTable from './Components/Table/TransactionHistory/TransactionHistoryTable';
 import TransactionHistoryDetails from './Components/Table/TransactionHistory/TransactionHistoryDetails';
+import Statistics from '../src/Components/Statistics/DataStatistic';
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
             <Route path='/details' element={<Layout> <LayoutDetails /> </Layout>} />
             <Route path='/transactions' element={<Layout title={'Transakcii'} > <TransactionHistoryTable /> </Layout>} />
             <Route path='/transactionDetails' element={<Layout title={'Transakcii'} > <TransactionHistoryDetails /> </Layout>} />
+            <Route path='/statistics' element={<Layout title={'Statistics'} > <Statistics /> </Layout>} />
         </Routes>
       </Router>
   );

@@ -7,7 +7,8 @@ import {
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
-  BackwardOutlined
+  BackwardOutlined,
+  LineChartOutlined
 } from '@ant-design/icons';
 import Table from '../Table/MainTable/Table';
 import ThemeSwitch from '../ThemeSwitch';
@@ -51,6 +52,11 @@ const items = [
     <a href="/transactions">Transakcii</a>, 
     '2', 
     <DesktopOutlined />
+  ),
+  getItem(
+    <a href="/statistics">Statistics</a>, 
+    '2', 
+    <LineChartOutlined />
   ),
 ];
 

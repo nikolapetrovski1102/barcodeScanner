@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Card, Switch } from 'antd';
+import { Avatar, Card, Switch, notification } from 'antd';
 
 import nipple from '../../images/nipple.png';
 import { useLocale } from "antd/es/locale";
@@ -37,8 +37,22 @@ const App = () => {
   const record = location.state?.record || [];
   const [loading, setLoading] = useState(true);
 
+  const openNotification = () => {
+    notification.open({
+      placement: 'topLeft',
+      type: 'warning',
+      message: 'Notification Title',
+      description:
+        'This is the content of the notification. This is the content of the notification.',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  };
+
   useEffect( () => {
     setTimeout( () => {
+      openNotification();
       setLoading(false);
     }, 1000)
   })
