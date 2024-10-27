@@ -5,8 +5,9 @@ const App = () => (
   <Row gutter={16}>
     <Col span={12}>
       <Card bordered={false}>
+        <p>Najmalce</p>
         <Statistic
-          title="Active"
+          title="12321321"
           value={11.28}
           precision={2}
           valueStyle={{
@@ -19,8 +20,9 @@ const App = () => (
     </Col>
     <Col span={12}>
       <Card bordered={false}>
+        <p>Najveke</p>
         <Statistic
-          title="Idle"
+          title="12321"
           value={9.3}
           precision={2}
           valueStyle={{

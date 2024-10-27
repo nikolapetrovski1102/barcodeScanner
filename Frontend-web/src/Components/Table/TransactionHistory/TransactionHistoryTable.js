@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, ConfigProvider, Form, Row, Col } from 'antd';
 import Highlighter from 'react-highlight-words';
-import Data from '../TransactionHistory';
+// import Data from '../TransactionHistory';
+import { Axios } from '../../Axios';
 
 const TableComponent = ({ element }) => {
   const navigate = useNavigate();
@@ -16,9 +17,22 @@ const TableComponent = ({ element }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [data, setData] = useState(Data);
+  const [data, setData] = useState("");
 
   useEffect(() => {
+
+    const axios = new Axios();
+
+    axios.get('/getTransaction', {})
+    .then(response => {
+      setData(response.data);
+    })
+    .catch(error => {
+      if (error.status === 401) {
+        navigate('/');
+      }
+      console.log(error);
+    });
 
     let table_cell_height = document.querySelector('.ant-table-cell').offsetHeight;
     let content_div_height = document.getElementById('content').offsetHeight - 230;
@@ -33,7 +47,7 @@ const TableComponent = ({ element }) => {
   
       onSelectChange(selectedKeys);
     }
-  }, [record, data]);
+  }, []);
   
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -100,23 +114,46 @@ const TableComponent = ({ element }) => {
 
   const columns = [
     {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      title: 'ID',
+      dataIndex: 'ID',
+      key: 'ID',
       width: '15%',
-      ...getColumnSearchProps('date'),
-      sorter: (a, b) => Date.parse(a.date) - Date.parse(b.date),
+      ...getColumnSearchProps('ID'),
+      sorter: (a, b) => Date.parse(a.ID) - Date.parse(b.ID),
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'To',
-      dataIndex: 'to',
-      key: 'to',
+      title: 'Seriski broj',
+      dataIndex: 'seriski_broj',
+      key: 'seriski_broj',
+      width: '15%',
+      ...getColumnSearchProps('date'),
+      sorter: (a, b) => Date.parse(a.seriski_broj) - Date.parse(b.seriski_broj),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Data',
+      dataIndex: 'date_created',
+      key: 'date_created',
+      width: '15%',
+      ...getColumnSearchProps('date_created'),
+      sorter: (a, b) => Date.parse(a.date_created) - Date.parse(b.date_created),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Tip',
+      dataIndex: 'type',
+      key: 'type'
+    },
+    {
+      title: 'Do/Od',
+      dataIndex: 'from_to',
+      key: 'from_to',
       width: '30%',
       ...getColumnSearchProps('to'),
     },
     {
-      title: 'No. of items',
+      title: 'Broj na produkti',
       dataIndex: 'no_items',
       key: 'no_items',
       width: '10%',
@@ -124,16 +161,16 @@ const TableComponent = ({ element }) => {
       sorter: (a, b) => parseInt(a.no_items) - parseInt(b.no_items),
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status'
+      title: 'Vozilo broj',
+      dataIndex: 'vozilo_broj',
+      key: 'vozilo_broj',
+      ...getColumnSearchProps('vozilo_broj'),
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      sorter: (a, b) => parseInt(a.price) - parseInt(b.price),
-      sortDirections: ['descend', 'ascend'],
+      title: 'ispratnica broj',
+      dataIndex: 'ispratnica_broj',
+      key: 'ispratnica_broj',
+      ...getColumnSearchProps('ispratnica_broj'),
     },
 
   ];

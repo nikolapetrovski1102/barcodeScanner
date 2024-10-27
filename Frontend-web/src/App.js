@@ -1,7 +1,6 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Link, Route } from 'react-router-dom';
-import axios from 'axios';
 
 import Table from './Components/Table/MainTable/Table';
 import LayoutDetails from './Components/Details/LayoutDetails';
@@ -13,22 +12,6 @@ import TransactionHistoryDetails from './Components/Table/TransactionHistory/Tra
 import Statistics from '../src/Components/Statistics/DataStatistic';
 
 function App() {
-
-  useEffect( () => {
-    // const savedTabsClass = localStorage.getItem('tabsClass');
-    // const savedTransferClass = localStorage.getItem('transferClass');
-    // const savedColsTransfer = localStorage.getItem('colsTransfer');
-    // const savedColsTabs = localStorage.getItem('colsTabs');
-    // const savedRecord = localStorage.getItem('record');
-
-    // if (savedTabsClass !== null && savedTransferClass !== null && savedColsTransfer !== null && savedColsTabs !== null && savedRecord !== null) {
-    //   localStorage.removeItem('record');
-    //   localStorage.removeItem('tabsClass');
-    //   localStorage.removeItem('transferClass');
-    //   localStorage.removeItem('colsTransfer');
-    //   localStorage.removeItem('colsTabs');
-    // }
-  })
 
   return (
       <Router>
@@ -43,6 +26,7 @@ function App() {
         </Routes>
       </Router>
   );
+  
 }
 
 export default App;

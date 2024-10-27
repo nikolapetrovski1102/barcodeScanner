@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import Details from './Details';
 import TransactionTable from '../Table/TransactionTable/TransactionTable';
 import TransferLayout from '../Transfer/TransferLayout';
+import axios from 'axios';
 
 function renderItems (items) {
   return Array.from(items).map((item) => ({
@@ -43,15 +44,11 @@ const MyList = () => {
 
   // Restore the saved classes when the component mounts
   useEffect(() => {
-       
     let table_cell_height = 123;
     let content_div_height = document.getElementById('content').offsetHeight - 200;
 
-    console.log("Content div height: ", content_div_height);
-
     setListPageSize(Math.floor(content_div_height / table_cell_height));
 
-    console.log("ListPageSize: ", listPageSize);
     // Load saved state from localStorage
     const savedTabsClass = localStorage.getItem('tabsClass');
     const savedTransferClass = localStorage.getItem('transferClass');

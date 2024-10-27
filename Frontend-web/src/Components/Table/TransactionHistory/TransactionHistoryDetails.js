@@ -3,9 +3,12 @@ import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Table, Input, InputNumber, Space, Form, Button, Row, Col, Modal, message, notification } from 'antd';
 import { stringify } from 'ajv';
 import Paragraph from 'antd/es/skeleton/Paragraph';
-import Data from '../Data';
+// import Data from '../Data';
+import { Axios } from '../../Axios';
+import axios from 'axios';
 
 const { TextArea } = Input;
+const axops = new Axios();
 
 const columns = [
   {
@@ -84,13 +87,6 @@ const Details = () => {
       message.success('Success!');
     };
 
-    const showNotification = () => {
-      notification.info({
-        message: 'Canceled Saved to Drafts',
-        // description: 'Hello, Ant Design!!',
-        placement: 'topLeft',
-      });
-    }
     const formatNumber = (number) => {
         if (isNaN(number)) return number;
         return new Intl.NumberFormat('en-US', {
@@ -129,14 +125,18 @@ const Details = () => {
   
 
   useEffect(() => {
+
+    axios.get(`/`).then((res) => {
+      
+    })
+
     if (isInitialMount.current) {
         isInitialMount.current = false;
         return;
     }
   
-
     if (record){
-        Array.from(Data).map((elem, _i) => {
+        Array.from(data).map((elem, _i) => {
             if (_i < record.no_items) {
                 item.push(elem);
             }

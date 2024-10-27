@@ -4,6 +4,7 @@ import { Table, Input, InputNumber, Space, Form, Button, Row, Col, Modal, messag
 import { stringify } from 'ajv';
 import Paragraph from 'antd/es/skeleton/Paragraph';
 import { calc } from 'antd/es/theme/internal';
+import { Axios } from '../Axios';
 
 const { TextArea } = Input;
 
@@ -76,18 +77,9 @@ const Details = ({ item }) => {
     const [seriskiBroj, setSeriskiBroj] = useState('');
     const [komada, setKomada] = useState(1);
     const [tableSize, setTableSize] = useState(7);
-    
-    const showMessage = () => {
-      message.success('Success!');
-    };
+    const [ispratnicaBroj, setispratnicaBroj] = useState("");
+    const [voziloBroj, setVoziloBroj] = useState("");
 
-    const showNotification = () => {
-      notification.info({
-        message: 'Canceled Saved to Drafts',
-        // description: 'Hello, Ant Design!!',
-        placement: 'topLeft',
-      });
-    }
     const formatNumber = (number) => {
         if (isNaN(number)) return number;
         return new Intl.NumberFormat('en-US', {
@@ -189,6 +181,11 @@ const Details = ({ item }) => {
     };
 
     const handleContinue = () => {
+      if (!kupuva || !seriskiBroj) {
+        message.error('Please enter kupuva and seriski broj.');
+        return;
+      }
+
       const updatedPreviewData = data.map((item, index) => {
         if (index === item.key) {
           return {
@@ -222,8 +219,37 @@ const Details = ({ item }) => {
     }
 
     const handleOnOkModal = () => {
-      setOpen(false);
-      showMessage();
+      if (!ispratnicaBroj && !voziloBroj) {
+        message.error('Please enter either ispratnica broj or vozilo broj.');
+        return;
+      }
+      const axios = new Axios();
+
+      const transfer_data = previewData.map(item => {
+        return Object.fromEntries(
+            Object.entries(item).map(([key, value]) => [key, value.toString()])
+        );
+      });
+
+      var body_data = {
+        transfer_data: JSON.stringify(transfer_data),
+        kupuva: kupuva,
+        seriskiBroj: seriskiBroj,
+        ispratnicaBroj: ispratnicaBroj,
+        voziloBroj: voziloBroj,
+        type: 'i'
+      };
+
+      axios.post('/postTransaction', body_data)
+        .then((response) => {
+          setOpen(false);
+          message.success('Success!');
+        })
+        .catch((error) => {
+          setOpen(false);
+          message.error('Something went wrong! Please try again.');
+          console.log(error);
+        });
     }
 
     const handleOnCancelModal = () => {
@@ -338,6 +364,7 @@ const Details = ({ item }) => {
             So ispratnica broj <span>{seriskiBroj}</span> - 
             <span>
               <Input
+                onChange={(e) => setispratnicaBroj(e.target.value)}
                 style={{
                   width: '3%',
                   border: 'none',
@@ -351,6 +378,7 @@ const Details = ({ item }) => {
             <span>/{new Date().getFullYear()}</span> od {dateNow} god so vozilo br. <span>
               <Input
                 variant='borderless'
+                onChange={(e) => setVoziloBroj(e.target.value)}
                 style={{
                   width: '7%',
                   border: 'none',

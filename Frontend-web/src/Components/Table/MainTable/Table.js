@@ -7,6 +7,9 @@ import Highlighter from 'react-highlight-words';
 import 'antd/dist/reset.css';
 import Data from '../Data';
 import Paragraph from 'antd/es/skeleton/Paragraph';
+import { Axios } from '../../Axios';
+
+const axios = new Axios();
 
 const TableComponent = ({ element }) => {
   const navigate = useNavigate();
@@ -21,9 +24,19 @@ const TableComponent = ({ element }) => {
   const [pageSize, setPageSize] = useState(10);
   const [spanText, setSpanText] = useState('Disable Row Selection');
   const [selectedRows, setSelectedRows] = useState([]);
-  const [data, setData] = useState(Data);
+  const [data, setData] = useState();
 
   useEffect(() => {
+    axios.get('/', {})
+    .then(function (response) {
+      setData(response.data);
+    })
+    .catch(function (error) {
+      if (error.status === 401){
+        navigate('/');
+      }
+      console.log(error);
+    });
 
     let table_cell_height = document.querySelector('.ant-table-cell').offsetHeight;
     let content_div_height = document.getElementById('content').offsetHeight - 285;
@@ -33,8 +46,6 @@ const TableComponent = ({ element }) => {
     if (record.length > 0) {
       const selectedKeys = record
         .map(item => item.key.toString())
-  
-      console.log('Selected Keys:', selectedKeys);
   
       onSelectChange(selectedKeys);
     }
@@ -136,15 +147,6 @@ const TableComponent = ({ element }) => {
     },
   ];
 
-  // Toggle row selection feature on/off
-  const handleRowSelectionToggle = (enable) => {
-    setRowSelectionEnabled(enable);
-    setSpanText(enable ? 'Disable Row Selection' : 'Enable Row Selection');
-    if (!enable) {
-      setSelectedRowKeys([]);
-    }
-  };
-
   // Handle row selection change
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -187,15 +189,11 @@ const TableComponent = ({ element }) => {
 
   return (
     <ConfigProvider theme={element}>
-      <Notification />
       <Row>
         <Col span={12} >
-          <Form.Item>
-            <span style={{ textDecoration: 'undreline', cursor: 'pointer' }} onClick={() => handleRowSelectionToggle(!rowSelectionEnabled)} >{spanText}</span>
-          </Form.Item>
         </Col>
         <Col style={{ display: 'flex', 'justifyContent': 'end' }} span={12}>
-          <Button onClick={handleRedirect} style={{ display: selectedRowKeys.length > 0 ? 'block' : 'none' }} >Continue</Button>
+          <Button onClick={handleRedirect} disabled={selectedRowKeys.length === 0} style={{ opacity: selectedRowKeys.length > 0 ? '1' : '.5' }} >Continue</Button>
         </Col >
       </Row>
       <Table
