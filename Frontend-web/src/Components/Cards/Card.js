@@ -2,10 +2,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Switch, notification } from 'antd';
-
+import { Axios } from '../Axios';
 import nipple from '../../images/nipple.png';
 import { useLocale } from "antd/es/locale";
 
+const axios = new Axios();
 
 const actions = [
   <EditOutlined key="edit" />,
@@ -37,13 +38,13 @@ const App = () => {
   const record = location.state?.record || [];
   const [loading, setLoading] = useState(true);
 
-  const openNotification = () => {
+  const openNotification = (item) => {
     notification.open({
       placement: 'topLeft',
       type: 'warning',
-      message: 'Notification Title',
+      message: 'Running Low on Stock',
       description:
-        'This is the content of the notification. This is the content of the notification.',
+        `The code ${item.sifra} from ${item.table_from} is running low on stock`,
       onClick: () => {
         console.log('Notification Clicked!');
       },
@@ -51,11 +52,17 @@ const App = () => {
   };
 
   useEffect( () => {
-    setTimeout( () => {
-      openNotification();
-      setLoading(false);
-    }, 1000)
-  })
+      axios.get('/api/Data/getCriticalItems').then( succ => {
+        console.log(succ);
+        if (succ.data.length > 0)
+          succ.data.forEach(element => {
+            openNotification(element);
+          });
+        setLoading(false);
+      }).catch(err =>{
+        console.log(err);
+      })
+  }, [])
 
   return (
     <>

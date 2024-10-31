@@ -237,10 +237,12 @@ const Details = ({ item }) => {
         seriskiBroj: seriskiBroj,
         ispratnicaBroj: ispratnicaBroj,
         voziloBroj: voziloBroj,
-        type: 'i'
+        type: 'izvoz'
       };
 
-      axios.post('/postTransaction', body_data)
+      console.log(body_data);
+
+      axios.post('/api/Data/postTransaction', body_data)
         .then((response) => {
           setOpen(false);
           message.success('Success!');

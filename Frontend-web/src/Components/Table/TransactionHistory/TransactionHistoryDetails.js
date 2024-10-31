@@ -3,12 +3,10 @@ import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Table, Input, InputNumber, Space, Form, Button, Row, Col, Modal, message, notification } from 'antd';
 import { stringify } from 'ajv';
 import Paragraph from 'antd/es/skeleton/Paragraph';
-// import Data from '../Data';
 import { Axios } from '../../Axios';
-import axios from 'axios';
 
 const { TextArea } = Input;
-const axops = new Axios();
+const axios = new Axios();
 
 const columns = [
   {
@@ -126,8 +124,14 @@ const Details = () => {
 
   useEffect(() => {
 
-    axios.get(`/`).then((res) => {
-      
+    let transaction_id = record.ID ?? null;
+
+    axios.get(`/api/Data/getTransactionDetails/${transaction_id}`)
+    .then(res => {
+      setData(JSON.parse(res.data[0].meta_value));
+    })
+    .catch(err => {
+      console.log(err);
     })
 
     if (isInitialMount.current) {

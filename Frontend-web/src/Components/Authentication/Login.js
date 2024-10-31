@@ -34,8 +34,9 @@ export default function App({ element }) {
 
   const onFinish = (values) => {
     
+    console.log(values);
+
     axios.login('/login', values).then((response) => {
-      console.log( response.data.access_token );
       axios.setAccessToken(response.data.access_token);
       const expirationDate = new Date(response.data.valid_to).toUTCString();
       document.cookie = `access_token=${response.data.access_token}; path=/; expires=${expirationDate}; SameSite=Lax; Secure`;

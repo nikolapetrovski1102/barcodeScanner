@@ -5,11 +5,14 @@ import DataChart from './DataChartTabs';
 
 const App = () => {
 
-  const highLowComponents = <HighLow key={1} />;
+  const highLowComponents = Array.from({ length: 5 }, (_, i) => <HighLow key={i} />);
 
   return (
     <Row>
-      <Col span={24} >
+      <Col span={8}>
+        {highLowComponents}
+      </Col>
+      <Col span={16} >
         <DataChart />
       </Col>
     </Row>

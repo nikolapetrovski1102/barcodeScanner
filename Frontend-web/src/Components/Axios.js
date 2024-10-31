@@ -22,11 +22,10 @@ export class Axios {
     }
 
     async get(url, body) {
-        return await axios.get(`${process.env.REACT_APP_API_URL}${url}`, {
+        return await axios.get(`${process.env.REACT_APP_API_URL}${url}`, body, {
             headers: {
                 'Authorization': 'Bearer ' + Axios.access_token,
             },
-            data: body,
         });
     }
 
@@ -34,7 +33,6 @@ export class Axios {
         return await axios.post(`${process.env.REACT_APP_API_URL}${url}`, body, {
             headers: {
                 'Authorization': 'Bearer ' + Axios.access_token,
-                'Content-Type': 'application/json'
             },
         });
     }

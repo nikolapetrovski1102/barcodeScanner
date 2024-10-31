@@ -1,10 +1,10 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import { Column, Line, Pie, Radar } from '@ant-design/charts';
+import { Column } from '@ant-design/charts';
 
-const onChange = (key, label) => {
-    
-  };
+const onChange = (key) => {
+        
+};
 
 const DataChart = () => {
     const stockData = [
@@ -17,66 +17,8 @@ const DataChart = () => {
         { item: 'Item G', stock: 50 },
         { item: 'Item H', stock: 30 },
       ];
-
-      const fillRateData = [
-        { type: 'Filled Orders', value: 98 },
-        { type: 'Stockouts', value: 2 },
-      ];
-
-      const salesData = [
-        { date: '2024-10-01', sales: 150 },
-        { date: '2024-10-02', sales: 200 },
-        { date: '2024-10-03', sales: 170 },
-      ];
       
-      const supplierData = [
-        { metric: 'Lead Time', SupplierA: 7, SupplierB: 5 },
-        { metric: 'Cost', SupplierA: 80, SupplierB: 90 },
-        { metric: 'Quality', SupplierA: 85, SupplierB: 88 },
-      ];
-
-      const configRadar = {
-        data: supplierData,
-        xField: 'metric',
-        yField: 'value',
-        seriesField: 'supplier',
-        smooth: true,
-        point: { size: 4 },
-      };
-
-      const configLine = {
-        data: salesData,
-        xField: 'date',
-        yField: 'sales',
-        smooth: true,
-        lineStyle: { stroke: '#ff4d4f' },
-      };
-      
-      const configPie = {
-        data: fillRateData,
-        angleField: 'value',
-        colorField: 'type',
-        radius: 1,
-        innerRadius: 0.6,
-        label: {
-          labelHeight: 28,
-          content: '{name}\n{percentage}',
-        },
-        interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-        statistic: {
-          title: false,
-          content: {
-            style: {
-              whiteSpace: 'pre-wrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            },
-            content: 'Stock vs Fill',
-          },
-        },
-      };
-
-      const configColumn = {
+      const config = {
         data: stockData,
         xField: 'item',
         yField: 'stock',
@@ -87,24 +29,23 @@ const DataChart = () => {
             opacity: 0.6,
           },
         },
+        color: '#40a9ff',
       };
 
-      const chartTypes = { 'Stock Levels': <Column {...configColumn} />, 'Sales Data': <Line {...configLine} />, 'Stockouts vs Fill Rate': <Pie {...configPie} />, 'Supplier Performance': <Radar {...configRadar} /> };
-
-      return (
+    return (
         <Tabs
-          onChange={onChange}
-          type="card"
-          items={Object.entries(chartTypes).map(([title, component], i) => {
+            onChange={onChange}
+            type="card"
+            items={new Array(3).fill(null).map((_, i) => {
             const id = String(i + 1);
             return {
-              label: title,
-              key: id,
-              children: component,
+                label: `Tab ${id}`,
+                key: id,
+                children: <Column {...config} />,
             };
-          })}
+            })}
         />
-      );
+    )
 
 };
 

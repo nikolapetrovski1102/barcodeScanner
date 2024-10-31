@@ -23,7 +23,7 @@ const TableComponent = ({ element }) => {
 
     const axios = new Axios();
 
-    axios.get('/getTransaction', {})
+    axios.get('/api/Data/getTransactions', {})
     .then(response => {
       setData(response.data);
     })

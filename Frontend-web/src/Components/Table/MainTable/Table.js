@@ -27,9 +27,10 @@ const TableComponent = ({ element }) => {
   const [data, setData] = useState();
 
   useEffect(() => {
-    axios.get('/', {})
+    axios.get('/api/Data', {})
     .then(function (response) {
-      setData(response.data);
+      console.log(response);
+      setData(response.data.result);
     })
     .catch(function (error) {
       if (error.status === 401){
@@ -193,7 +194,7 @@ const TableComponent = ({ element }) => {
         <Col span={12} >
         </Col>
         <Col style={{ display: 'flex', 'justifyContent': 'end' }} span={12}>
-          <Button onClick={handleRedirect} disabled={selectedRowKeys.length === 0} style={{ opacity: selectedRowKeys.length > 0 ? '1' : '.5' }} >Continue</Button>
+          <Button onClick={handleRedirect} disabled={selectedRowKeys.length === 0} style={{ opacity: selectedRowKeys.length > 0 ? '1' : '.5', marginBottom: "2%" }} >Continue</Button>
         </Col >
       </Row>
       <Table
