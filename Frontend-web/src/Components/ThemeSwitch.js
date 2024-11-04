@@ -1,24 +1,29 @@
 import React from 'react';
-import { Switch, FloatButton } from 'antd';
+import { Switch } from 'antd';
 import { SunFilled, MoonFilled } from '@ant-design/icons';
 
 const ThemeSwitch = ({ onToggle }) => {
-  const [checkWindows, setCheckWindows] = React.useState(true);
-  
-  let checked = false;
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && checkWindows) {
-    onToggle(true);
-    checked = true;
-  }
+  const [checked, setChecked] = React.useState(false);
+
+  React.useEffect(() => {
+    const isDark = localStorage.getItem('darkTheme') === 'true';
+    setChecked(isDark);
+    onToggle(isDark);
+  }, [onToggle]);
+
+  const handleToggle = (value) => {
+    setChecked(value);
+    localStorage.setItem('darkTheme', value);
+    onToggle(value);
+  };
 
   return (
     <Switch
       checkedChildren={<MoonFilled />}
       unCheckedChildren={<SunFilled />}
-      size='xl'
-      defaultChecked={checked}
-      onChange={onToggle}
-      onClick={() => setCheckWindows(false)}
+      size="xl"
+      checked={checked}
+      onChange={handleToggle}
       style={{ margin: '0 1% 6% 0' }}
     />
   );

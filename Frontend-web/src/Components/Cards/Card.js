@@ -16,19 +16,8 @@ const actions = [
 
 const cards = [
   {
-    title: 'Adapteri Nipli'
-  },
-  {
-    title: 'ALFAGOMMA'
-  },
-  {
-    title: 'Cauri'
-  },
-  {
-    title: 'Cidat'
-  },
-  {
-    title: 'Contitex'
+    title: 'Adapteri Nipli',
+    table_name: "adapteri_nipli"
   }
 ];
 
@@ -37,6 +26,7 @@ const App = () => {
   const location = useLocation();
   const record = location.state?.record || [];
   const [loading, setLoading] = useState(true);
+  const isInitialized = React.useRef(false);
 
   const openNotification = (item) => {
     notification.open({
@@ -52,17 +42,23 @@ const App = () => {
   };
 
   useEffect( () => {
+      setLoading(true);
       axios.get('/api/Data/getCriticalItems').then( succ => {
+        if (succ.status === 401)
+          navigate('/');
+
         console.log(succ);
+        setLoading(true);
         if (succ.data.length > 0)
           succ.data.forEach(element => {
             openNotification(element);
           });
-        setLoading(false);
       }).catch(err =>{
-        console.log(err);
-      })
-  }, [])
+        setLoading(true);
+        if (err.status === 401)
+          navigate('/');
+      }).finally( () => setLoading(false));
+  }, [navigate])
 
   return (
     <>
@@ -70,11 +66,10 @@ const App = () => {
       <div style={{ flexWrap: 'wrap', display: 'flex', flexDirection: 'row', gap: '16px' }}>
         {cards.map((card, index) => (
           <Card
-            onClick={() => navigate("/data", { state: { record: record } }) }
+            onClick={() => navigate(`/data`, { state: { record: record, table_name: card.table_name, title: card.title } }) }
             id='menu-cards'
             key={index}
             loading={loading}
-            actions={actions}
             style={{
               minWidth: 200,
               width: 300,

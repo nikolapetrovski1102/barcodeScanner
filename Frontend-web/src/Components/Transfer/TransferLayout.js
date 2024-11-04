@@ -13,7 +13,7 @@ const validateMessages = {
 };
 
 
-const TransferLayout = ({ onTransferSubmit, item }) => {
+const TransferLayout = ({ onTransferSubmit, item, trigger }) => {
 
   const onFinish = (values) => {
     if (onTransferSubmit) {

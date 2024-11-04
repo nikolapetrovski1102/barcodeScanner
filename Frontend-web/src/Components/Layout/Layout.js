@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider, Row, Col, Divider, FloatButton } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, ConfigProvider, Row, Col, Divider } from 'antd';
 import BackIcon from './BackButton';
 import {
   DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
+  PlusSquareOutlined,
   UserOutlined,
-  BackwardOutlined,
-  LineChartOutlined
+  FallOutlined
 } from '@ant-design/icons';
 import Table from '../Table/MainTable/Table';
 import ThemeSwitch from '../ThemeSwitch';
@@ -54,9 +51,14 @@ const items = [
     <DesktopOutlined />
   ),
   getItem(
-    <a href="/statistics">Statistics</a>, 
+    <a href="/add_new">Add</a>,
     '2', 
-    <LineChartOutlined />
+    <PlusSquareOutlined />
+  ),
+  getItem(
+    <a href="/low_stock">Low on Stock Items</a>,
+    '2',
+    <FallOutlined />
   ),
 ];
 
@@ -103,7 +105,7 @@ const App = ({ children, title }) => {
               {(title !== 'Login' && title !== 'Menu') ? (
                 <BackIcon onClick={() => window.history.back()} />
               ) : ('')}
-                <h1 style={{ margin: '0 0 0% 5%' }}>
+                <h1 id='title' style={{ margin: '0 0 0% 5%' }}>
                   {title}
                 </h1>
               </Col>

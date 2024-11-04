@@ -79,6 +79,7 @@ const Details = ({ item }) => {
     const [tableSize, setTableSize] = useState(7);
     const [ispratnicaBroj, setispratnicaBroj] = useState("");
     const [voziloBroj, setVoziloBroj] = useState("");
+    const [tableInit, setTableInit] = useState(false);
 
     const formatNumber = (number) => {
         if (isNaN(number)) return number;
@@ -139,8 +140,7 @@ const Details = ({ item }) => {
                     style={{ width: '95%' }}
                     onChange={(value) => handleChange(value, element, _i)}
                     min={1}
-                    max={parseInt(kolicina[_i])}
-                    defaultValue={1}
+                    defaultValue={0}
                 />
             ),
             kol_sos: (kolicina[_i] || element.komada),
@@ -240,16 +240,20 @@ const Details = ({ item }) => {
         type: 'izvoz'
       };
 
-      console.log(body_data);
-
       axios.post('/api/Data/postTransaction', body_data)
         .then((response) => {
-          setOpen(false);
-          message.success('Success!');
+          if (response.status === 200){
+            setOpen(false);
+            message.success('Success!');
+            setTimeout( () => {
+              navigate('/menu');
+            }, 1000)
+          }
         })
         .catch((error) => {
           setOpen(false);
           message.error('Something went wrong! Please try again.');
+          window.history.go(-1);
           console.log(error);
         });
     }
@@ -368,9 +372,10 @@ const Details = ({ item }) => {
               <Input
                 onChange={(e) => setispratnicaBroj(e.target.value)}
                 style={{
-                  width: '3%',
+                  width: '5%',
                   border: 'none',
                   borderBottom: '1px solid',
+                  textAlign: 'left',
                   backgroundColor: 'transparent',
                   padding: 0,
                   margin: 0,
@@ -382,10 +387,11 @@ const Details = ({ item }) => {
                 variant='borderless'
                 onChange={(e) => setVoziloBroj(e.target.value)}
                 style={{
-                  width: '7%',
+                  width: '11%',
                   border: 'none',
                   borderBottom: '1px solid',
                   backgroundColor: 'transparent',
+                  textAlign: 'center',
                   padding: 0,
                   margin: 0,
                 }}
@@ -408,7 +414,7 @@ const Details = ({ item }) => {
               value={kupuva}
               disabled
               variant='borderless'
-              style={{ width: '30%', color: '#fff' }}
+              style={{ width: '30%' }}
               autoSize={{
                 minRows: 3,
                 maxRows: 5,
@@ -423,7 +429,7 @@ const Details = ({ item }) => {
               <span>Skopje, {dateNow}</span>
             </Form.Item>
       
-            <Form.Item 
+            <Form.Item
               label='Seriski broj'
               labelCol={{ span: 20 }}
               wrapperCol={{ span: 4 }}
@@ -436,7 +442,7 @@ const Details = ({ item }) => {
                 variant='borderless'
                 size='small'
                 suffix={`/${new Date().getFullYear().toString().substr(-2)}`} 
-                style={{ width: '100%', color: '#fff' }}
+                style={{ width: '100%' }}
               />
             </Form.Item>
           </Col>

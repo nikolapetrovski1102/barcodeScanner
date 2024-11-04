@@ -11,55 +11,32 @@ import { Axios } from '../../Axios';
 
 const axios = new Axios();
 
-const TableComponent = ({ element }) => {
+const LowStockTable = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const record = location.state?.record || [];
-  const current_table = location.state?.table_name || "";
-  const title = location.state?.title || "";
+  const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef(null);
-  const [open, setOpen] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [rowSelectionEnabled, setRowSelectionEnabled] = useState(true);
   const [pageSize, setPageSize] = useState(10);
-  const [spanText, setSpanText] = useState('Disable Row Selection');
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [data, setData] = useState();
-  const [tableClass, setTableClass] = useState('toggle_show');
-  const [spinning, setSpinning] = useState(false);
+  const searchInput = useRef(null);
 
-  useEffect(() => {
-    document.getElementById('title').innerHTML = title;
-    setSpinning(true);
-    axios.get(`/api/Data?current_table=${encodeURIComponent(current_table)}`, {})
-    .then(function (response) {
-      console.log(response);
-      setSpinning(false);
-      setData(response.data.result);
-    })
-    .catch(function (error) {
-      setSpinning(false);
-      if (error.status === 401){
-        navigate('/');
-      }
-      console.log(error);
-    });
-
+  useEffect( () => {
     let table_cell_height = document.querySelector('.ant-table-cell').offsetHeight;
     let content_div_height = document.getElementById('content').offsetHeight - 285;
 
     setPageSize(Math.floor(content_div_height / table_cell_height));
-    
-    if (record.length > 0) {
-      const selectedKeys = record
-        .map(item => item.key.toString())
-  
-      onSelectChange(selectedKeys);
-    }
-  }, []);
-  
+
+    axios.get('/api/Data/criticalItem', {})
+    .then( response =>{
+      setData(response.data[0]);
+    }).catch( error => {
+      console.log(error);
+    })
+
+  })
+
+  const handleOnClick = (record) => {
+    navigate(`/add_new/`, { state: { record } });
+  }
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -163,79 +140,11 @@ const TableComponent = ({ element }) => {
     },
   ];
 
-  // Handle row selection change
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    const selectedRows = data.filter((item) => newSelectedRowKeys.includes(item.key));
-    setSelectedRows(selectedRows);
-  };
-
-  const handleRedirect = () => {
-    setTableClass('');
-    setTimeout( () => {
-      setTableClass('toggle_hide');
-    }, 10);
-
-    setTimeout( () => {
-      navigate(`/details/`, { state: { record: selectedRows, table: current_table } });
-    }, 250)
-  }
-
-  const handleSingleClick = (record) => {
-    selectedRows.push(record);
-    if (!rowSelectionEnabled) {
-      navigate(`/details/`, { state: { record, table: current_table } });
-    } else {
-      const newSelectedRowKeys = [...selectedRowKeys]; // Copy the current selected keys
-  
-      const selectedRowIndex = newSelectedRowKeys.indexOf(record.key);
-  
-
-      if (selectedRowIndex > -1) {
-        newSelectedRowKeys.splice(selectedRowIndex, 1);
-      } else {
-        newSelectedRowKeys.push(record.key);
-      }
-
-      onSelectChange(newSelectedRowKeys);
-    }
-  };
-
-
-  const handleAdd = () => {
-    setTableClass('');
-    setTimeout( () => {
-      setTableClass('toggle_hide');
-    }, 10);
-  
-    setTimeout(() => {
-      navigate(`/add_new/`, { state: { table: current_table } });
-    }, 250);
-  };
-
-  const rowSelection = rowSelectionEnabled
-    ? {
-        selectedRowKeys,
-        onChange: onSelectChange,
-      }
-    : null;
-
-  return (
-    <ConfigProvider theme={element}>
-      <div className={tableClass} >
-      <Row>
-        <Col span={12} >
-        <Button onClick={handleAdd} disabled={selectedRowKeys.length !== 0} style={{ opacity: selectedRowKeys.length > 0 ? '.5' : '1', marginBottom: "2%" }} >Add new</Button>
-        </Col>
-        <Col style={{ display: 'flex', 'justifyContent': 'end' }} span={12}>
-          <Button onClick={handleRedirect} disabled={selectedRowKeys.length === 0} style={{ opacity: selectedRowKeys.length > 0 ? '1' : '.5', marginBottom: "2%" }} >Continue</Button>
-        </Col >
-      </Row>
-      <Table
-        rowSelection={rowSelection}
+    return (
+        <Table
         onRow={(record) => ({
           style: { cursor: 'pointer' },
-          onClick: () => handleSingleClick(record)
+          onClick: () => handleOnClick(record),
         })}
         columns={columns}
         dataSource={data}
@@ -248,10 +157,7 @@ const TableComponent = ({ element }) => {
         }}
         size="large"
       />
-      </div>
-      <Spin spinning={spinning} fullscreen />
-    </ConfigProvider>
-  );
-};
+    )
+}
 
-export default TableComponent;
+export default LowStockTable;

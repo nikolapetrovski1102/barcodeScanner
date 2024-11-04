@@ -26,13 +26,13 @@
                 $table = str_replace(' ', '_', $table);
                 $table = explode('.', $table)[0];
 
-                $check_table_query = "SHOW TABLES LIKE '$table'";
+                $check_table_query = "SHOW TABLES LIKE 'items_{$table}'";
 
                     $result = $con->query($check_table_query);
 
                     if (mysqli_num_rows($result) <= 0){
                         $create_table_query = 
-                            "CREATE TABLE $table (
+                            "CREATE TABLE items_{$table} (
                                 sifra INT NOT NULL PRIMARY KEY,
                                 head_type VARCHAR(200) NOT NULL,
                                 type VARCHAR(200) NOT NULL
@@ -45,11 +45,12 @@
                         echo 'Error: ' . $create_table_query . '<br>' . $con->error;
 
                         $create_details_table_query = 
-                            "CREATE TABLE {$table}_details (
+                            "CREATE TABLE items_{$table}_details (
                                 sifra INT NOT NULL,
                                 cena FLOAT NOT NULL,
                                 komada VARCHAR(200) NULL,
                                 opis VARCHAR(255) NULL,
+                                times_used INT NULL DEFAULT 0,
                                 FOREIGN KEY (sifra) REFERENCES $table(sifra) ON DELETE CASCADE
                             );";
 
@@ -90,6 +91,8 @@
                 if (empty($row[1]) && !empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) ){
                     echo "<br> $head_type <br>";
                     $head_type = $row[2];
+                    $head_type = str_replace(' ', '', $head_type);
+                    $head_type = str_replace('-', '_', $head_type);
                 }
 
                 if (!empty($row[1]) && empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) ){
@@ -100,10 +103,10 @@
                     $opis = str_replace(' ', '', $row[1]);
                     
                     if (empty($query_row)){
-                        $query_row = "INSERT IGNORE INTO $table (sifra, head_type, type) VALUES
+                        $query_row = "INSERT IGNORE INTO items_{$table} (sifra, head_type, type) VALUES
                             ($row[3], '$head_type', '$type');
 
-                        INSERT INTO {$table}_details (sifra, cena, komada, opis) VALUES
+                        INSERT INTO items_{$table}_details (sifra, cena, komada, opis) VALUES
                             ($row[3], $row[5], '$row[4]', '$opis');";
 
                         echo '<br>';

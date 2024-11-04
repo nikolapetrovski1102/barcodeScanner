@@ -128,7 +128,9 @@ const Details = () => {
 
     axios.get(`/api/Data/getTransactionDetails/${transaction_id}`)
     .then(res => {
-      setData(JSON.parse(res.data[0].meta_value));
+      var parsed_data = JSON.parse(res.data[0].meta_value);
+      setData(parsed_data);
+      setTotal(parsed_data[parsed_data.length - 1].ddv_amount);
     })
     .catch(err => {
       console.log(err);
@@ -167,23 +169,23 @@ const Details = () => {
         const totalDdv = tableData.reduce((total, item) => total + (parseFormattedNumber(item.ddv) || 0), 0);
         const totalDdvAmount = tableData.reduce((total, item) => total + (parseFormattedNumber(item.ddv_amount) || 0), 0);          
 
-          setTotal(totalDdvAmount);
+        setTotal(totalDdvAmount);
 
-          setData([
-              ...tableData,
-              {
-                  key: 'total',
-                  sifra: '',
-                  opis: 'Total',
-                  kol: '',
-                  kol_sos: '',
-                  cena: '',
-                  no_ddv: formatNumber(totalNoDdv),
-                  ddv_percent: '',
-                  ddv: formatNumber(totalDdv),
-                  ddv_amount: formatNumber(totalDdvAmount),
-              },
-          ]);
+        setData([
+            ...tableData,
+            {
+                key: 'total',
+                sifra: '',
+                opis: 'Total',
+                kol: '',
+                kol_sos: '',
+                cena: '',
+                no_ddv: formatNumber(totalNoDdv),
+                ddv_percent: '',
+                ddv: formatNumber(totalDdv),
+                ddv_amount: formatNumber(totalDdvAmount),
+            },
+        ]);
       }
   }, [item, cena, kolicina]);
 
@@ -235,7 +237,6 @@ const Details = () => {
     }
 
     const handleAddRows = () => {
-      console.log(item);
       const serializableData = item.map((_item) => {
         return {
           key: _item.key,

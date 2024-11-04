@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { List, Col, Row, Tabs, Skeleton, Space } from 'antd';
+import { List, Col, Row, Tabs, Skeleton, Space, Spin } from 'antd';
 import ListData from '../Table/Data';
 import { DatabaseOutlined, DollarOutlined } from '@ant-design/icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Details from './Details';
 import TransactionTable from '../Table/TransactionTable/TransactionTable';
 import TransferLayout from '../Transfer/TransferLayout';
-import axios from 'axios';
+import { Axios } from '../Axios';
+
+const axios = new Axios();
 
 function renderItems (items) {
   return Array.from(items).map((item) => ({
@@ -28,22 +30,46 @@ const IconText = ({ icon, text }) => (
 
 const MyList = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [record, setRecord] = useState(location.state?.record || JSON.parse(localStorage.getItem('record')) || []);
+  const current_table = location.state?.table || localStorage.getItem('current_table') || '';
   const [skeletonLoad, setSkeletonLoad] = useState(false);
   const [selectedItem, setSelectedItem] = useState(record.length > 0 ? record : []);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [colsTransfer, setColsTransfer] = useState(0);
-  const [colsTabs, setColsTabs] = useState(20);
-  const [listsCol, setListsCol] = useState(4);
+  const [colsTabs, setColsTabs] = useState(18);
+  const [listsCol, setListsCol] = useState(6);
   const [listPageSize, setListPageSize] = useState(5);
   const [tabsClass, setTabsClass] = useState('toggle_show');
   const [transferClass, setTransferClass] = useState('toggle_hide');
   const [listDisplay, setListDisplay] = useState('block');
   const [tabsDisplay, setTabsDisplay] = useState('block');
   const [data, setData] = useState([]);
+  const [listData, setListData] = useState([]);
+  const [spinning, setSpinning] = useState(false);
+  const [doShowTotal, setDoShowTotal] = useState("true");
 
   // Restore the saved classes when the component mounts
   useEffect(() => {
+    if (selectedItem.length == 1){
+      axios.get(`/api/Data?current_table=${encodeURIComponent(current_table)}`, {})
+      .then(function (response) {
+        setSpinning(false);
+        setListData(response.data.result);
+        console.log("Selected item: ");
+        console.log(selectedItem);
+        setData(renderItems(response.data.result));
+      })
+      .catch(function (error) {
+        setSpinning(false);
+        if (error.status === 401){
+          navigate('/');
+        }
+        console.log(error);
+      });
+    }else
+      setData(selectedItem);
+
     let table_cell_height = 123;
     let content_div_height = document.getElementById('content').offsetHeight - 200;
 
@@ -54,19 +80,25 @@ const MyList = () => {
     const savedTransferClass = localStorage.getItem('transferClass');
     const savedColsTransfer = localStorage.getItem('colsTransfer');
     const savedColsTabs = localStorage.getItem('colsTabs');
+    const savedColsList = localStorage.getItem('colsList');
     const savedRecord = localStorage.getItem('record');
+    const savedDoShowTotal = localStorage.getItem('doShowTotal');
   
-    setData(renderItems(selectedItem.length > 1 ? selectedItem : ListData));
-
-    if (savedTabsClass && savedTransferClass && savedColsTransfer !== null && savedColsTabs !== null && savedRecord !== null) {
+    if (savedTabsClass && savedTransferClass && savedColsTransfer !== null && savedColsTabs !== null && savedRecord !== null && savedColsList !== null) {
       console.log("Loading from localStorage");
       const parsedRecord = JSON.parse(savedRecord);
-      setTabsClass(savedTabsClass);
-      setTransferClass(savedTransferClass);
-      setColsTransfer(Number(savedColsTransfer));
-      setColsTabs(Number(savedColsTabs));
-      setSelectedItem(parsedRecord);
-      setData(renderItems(parsedRecord.length > 1 ? parsedRecord : ListData));
+      setListsCol(Number(savedColsList));
+      setTimeout( () => {
+        setColsTransfer(Number(savedColsTransfer));
+        setColsTabs(Number(savedColsTabs));
+      }, 500)
+        setTabsClass(savedTabsClass);
+        setTransferClass(savedTransferClass);
+        setSelectedItem(parsedRecord);
+        setData(renderItems(parsedRecord.length > 1 ? parsedRecord : listData));
+        setDoShowTotal(savedDoShowTotal);
+        console.log(savedDoShowTotal);
+        console.log(doShowTotal);
     }
   
     // Clear localStorage on back navigation
@@ -75,10 +107,12 @@ const MyList = () => {
         localStorage.removeItem('record');
 
       setTransferClass('toggle_hide');
+      setDoShowTotal('true');
+      setListsCol(6);
       setTimeout( () => {
-        setColsTabs(20);
         setColsTransfer(0);
-      }, 300)
+        setColsTabs(18);
+      }, 500)
       setTabsClass('');
       setTabsClass('toggle_show');
       setTimeout( () => {
@@ -86,6 +120,9 @@ const MyList = () => {
         localStorage.removeItem('transferClass');
         localStorage.removeItem('colsTransfer');
         localStorage.removeItem('colsTabs');
+        localStorage.removeItem('colsList');
+        localStorage.removeItem('current_table');
+        localStorage.removeItem('doShowTotal');
       }, 700)
     };
     
@@ -97,32 +134,38 @@ const MyList = () => {
     if (formData === 'Back') {
       setTabsClass('toggle_show');
       setTransferClass('toggle_hide');
+      setDoShowTotal('true');
+      setListsCol(6);
       setTimeout( () => {
         setColsTransfer(0);
-        setColsTabs(20);
+        setColsTabs(18);
       }, 500)
   
       // Save state to localStorage
       localStorage.setItem('tabsClass', 'toggle_show');
       localStorage.setItem('transferClass', 'toggle_hide');
       localStorage.setItem('colsTransfer', 0);
-      localStorage.setItem('colsTabs', 20);
+      localStorage.setItem('colsTabs', 18);
   
     } else if (formData === 'Continue') {
       window.history.pushState({ record: selectedItem }, null, '/details');
       setTabsClass('toggle_hide');
       setTransferClass('toggle_show');
+      setListsCol(4);
+      setDoShowTotal('false');
       setTimeout( () => {
         setColsTransfer(20);
         setColsTabs(0);
       }, 500)
   
-      // Save state to localStorage
       localStorage.setItem('tabsClass', 'toggle_hide');
       localStorage.setItem('transferClass', 'toggle_show');
       localStorage.setItem('colsTransfer', 20);
+      localStorage.setItem('colsList', 4);
       localStorage.setItem('colsTabs', 0);
       localStorage.setItem('record', JSON.stringify(selectedItem));
+      localStorage.setItem('current_table', current_table);
+      localStorage.setItem('doShowTotal', false);
     }
   
     console.log('Form submitted with data:', formData);
@@ -184,9 +227,10 @@ const MyList = () => {
         onChange: (page) => {
           console.log(page);
         },
-        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
+        showTotal: doShowTotal === 'false' ? '' : (total, range) => `${range[0]}-${range[1]} of ${total}`,
         pageSize: listPageSize,
-        size: 'small'
+        size: 'small',
+        showSizeChanger: false
       }}
       dataSource={data}
       renderItem={(item) => (
@@ -225,10 +269,11 @@ const MyList = () => {
     />
   </Col>
   <Col span={colsTransfer} className={transferClass} >
-    <TransferLayout
-      item={selectedItem.length == 1 ? selectedItem : record}
-    />
+  <TransferLayout 
+    item={selectedItem.length === 1 ? selectedItem : record} 
+  />
   </Col>
+  <Spin spinning={spinning} fullscreen />
 </Row>
   );
 };

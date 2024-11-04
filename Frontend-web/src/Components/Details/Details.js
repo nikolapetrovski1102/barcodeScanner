@@ -39,13 +39,6 @@ const App = ({ item, onFormSubmit }) => {
     }
   };
 
-  const onEdit = () => {
-    setInputStyles('block');
-    setSpanStyles('none');
-    setButtonText('Save');
-    console.log('Received values of form: ', form.getFieldsValue());
-  };
-
   const cancelEdit = () => {
     setInputStyles('none');
     setSpanStyles('block');
@@ -57,34 +50,11 @@ const App = ({ item, onFormSubmit }) => {
       onFormSubmit(buttonText);
     }
     if (buttonText === 'Continue') {
-    //     console.log('Continue');
-    //     document.getElementById('lists').classList.remove('toggle_show');
-    //     document.getElementById('lists').classList.add('toggle_hide');
-    //     document.getElementById('divider').style.display = 'block';
-    //     document.getElementById('divider').classList.add('toggle_show')
-    //     setTimeout( () => {
-    //       setCols(10);
-    //       document.getElementById('details_row').classList.remove('move_right');
-    //       document.getElementById('details_row').classList.add('move_left');
-    //       document.getElementById('transfer').classList.add('toggle_show')
-    //       document.getElementById('transfer').style.display = 'block';
-    //     }, 400);
     }
     else if (buttonText === 'Save') {
       console.log('Received values of form: ', form.getFieldsValue());
     }
     else if (buttonText === 'Back') {
-    //   document.getElementById('divider').classList.add('toggle_show')
-    //   document.getElementById('divider').style.display = 'none';
-    //   setTimeout( () => {
-    //     setCols(18);
-    //     document.getElementById('details_row').classList.remove('move_left');
-    //     document.getElementById('details_row').classList.add('move_right');
-    //     document.getElementById('transfer').classList.remove('toggle_hide');
-    //     document.getElementById('transfer').style.display = 'none';
-    //     document.getElementById('lists').classList.remove('toggle_hide');
-    //     document.getElementById('lists').classList.add('toggle_show');
-    //   }, 400);
       setButtonText('Continue');
     }
   }
@@ -114,11 +84,11 @@ const App = ({ item, onFormSubmit }) => {
           </Button>
         </Col>
         <Col style={{ width: '100%', display: 'flex', justifyContent: 'right' }} span={12} >
-          <EditFilled
+          {/* <EditFilled
             style={{ fontSize: '1.2rem', padding: '0%' }}
             action="click"
             onClick={onEdit}
-          />
+          /> */}
         </Col>
         {/* </div> */}
         </Row>

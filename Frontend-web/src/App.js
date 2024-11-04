@@ -9,7 +9,8 @@ import Layout from './Components/Layout/Layout';
 import Cards from './Components/Cards/Card';
 import TransactionHistoryTable from './Components/Table/TransactionHistory/TransactionHistoryTable';
 import TransactionHistoryDetails from './Components/Table/TransactionHistory/TransactionHistoryDetails';
-import Statistics from '../src/Components/Statistics/DataStatistic';
+import AddNew from './Components/Add/AddNew';
+import LowStockTable from './Components/Table/LowStockTable/LowStockTable';
 
 function App() {
 
@@ -18,11 +19,12 @@ function App() {
         <Routes>
             <Route path='/' element={<Layout title='Login' > <Login /> </Layout>} />
             <Route path='/menu' element={<Layout title={'Menu'} > <Cards /> </Layout>} />
-            <Route path='/data' element={<Layout > <Table /> </Layout>} />
+            <Route path='/data' element={<Layout> <Table /> </Layout>} />
             <Route path='/details' element={<Layout> <LayoutDetails /> </Layout>} />
             <Route path='/transactions' element={<Layout title={'Transakcii'} > <TransactionHistoryTable /> </Layout>} />
             <Route path='/transactionDetails' element={<Layout title={'Transakcii'} > <TransactionHistoryDetails /> </Layout>} />
-            <Route path='/statistics' element={<Layout title={'Statistics'} > <Statistics /> </Layout>} />
+            <Route path='/add_new' element={<Layout title={'Add'} > <AddNew /> </Layout>} />
+            <Route path='/low_stock' element={<Layout title={'Low Stock'} > <LowStockTable /> </Layout>} />
         </Routes>
       </Router>
   );

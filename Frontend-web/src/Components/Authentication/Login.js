@@ -28,19 +28,16 @@ export default function App({ element }) {
 
     if (access_token) {
       axios.setAccessToken(access_token);
-      navigate('/menu');
+      // navigate('/menu');
     }
   })
 
   const onFinish = (values) => {
-    
-    console.log(values);
-
     axios.login('/login', values).then((response) => {
       axios.setAccessToken(response.data.access_token);
       const expirationDate = new Date(response.data.valid_to).toUTCString();
       document.cookie = `access_token=${response.data.access_token}; path=/; expires=${expirationDate}; SameSite=Lax; Secure`;
-      navigate('/menu')
+      // navigate('/menu')
     }).catch((error) => {
       console.log(error);
     });
@@ -154,18 +151,18 @@ export default function App({ element }) {
               <Form.Item name="rememberMe" valuePropName="checked" noStyle>
                 <Checkbox>Remember me</Checkbox>
               </Form.Item>
-              <a style={styles.forgotPassword} href="">
+              {/* <a style={styles.forgotPassword} href="">
                 Forgot password?
-              </a>
+              </a> */}
             </Form.Item>
             <Form.Item style={{ marginBottom: "0px" }}>
               <Button block="true" type="primary" htmlType="submit">
                 Log in
               </Button>
-              <div style={styles.footer}>
+              {/* <div style={styles.footer}>
                 <Text style={styles.text}>Don't have an account?</Text>{" "}
                 <Link href="">Sign up now</Link>
-              </div>
+              </div> */}
             </Form.Item>
           </Form>
         </div>
