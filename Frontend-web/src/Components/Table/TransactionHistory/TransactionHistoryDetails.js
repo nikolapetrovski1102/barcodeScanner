@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Navigate, useNavigate, useLocation } from "react-router-dom";
-import { Table, Input, InputNumber, Space, Form, Button, Row, Col, Modal, message, notification } from 'antd';
-import { stringify } from 'ajv';
-import Paragraph from 'antd/es/skeleton/Paragraph';
+import { useNavigate, useLocation } from "react-router-dom";
+import { Table, Input, Form,Row, Col, message, Spin } from 'antd';
 import { Axios } from '../../Axios';
 
 const { TextArea } = Input;
@@ -80,6 +78,7 @@ const Details = () => {
     const [komada, setKomada] = useState(1);
     const [item, setItem] = useState([]);
     const isInitialMount = useRef(true);
+    const [spinning, setSpinning] = useState(true);
     
     const showMessage = () => {
       message.success('Success!');
@@ -131,6 +130,7 @@ const Details = () => {
       var parsed_data = JSON.parse(res.data[0].meta_value);
       setData(parsed_data);
       setTotal(parsed_data[parsed_data.length - 1].ddv_amount);
+      setSpinning(false);
     })
     .catch(err => {
       console.log(err);
@@ -327,6 +327,7 @@ const Details = () => {
       />
       </div>
       {/* Form input */}
+      <Spin spinning={spinning} fullscreen />
       </>
     );
   };

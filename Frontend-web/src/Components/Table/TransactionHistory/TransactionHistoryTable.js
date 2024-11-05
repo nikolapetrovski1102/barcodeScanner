@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, ConfigProvider, Form, Row, Col } from 'antd';
+import { Button, Input, Space, Table, ConfigProvider, Form, Row, Col, Spin } from 'antd';
 import Highlighter from 'react-highlight-words';
 // import Data from '../TransactionHistory';
 import { Axios } from '../../Axios';
@@ -18,6 +18,7 @@ const TableComponent = ({ element }) => {
   const [pageSize, setPageSize] = useState(10);
   const [selectedRows, setSelectedRows] = useState([]);
   const [data, setData] = useState("");
+  const [spinning, setSpinning] = useState(true);
 
   useEffect(() => {
 
@@ -26,11 +27,13 @@ const TableComponent = ({ element }) => {
     axios.get('/api/Data/getTransactions', {})
     .then(response => {
       setData(response.data);
+      setSpinning(false);
     })
     .catch(error => {
       if (error.status === 401) {
         navigate('/');
       }
+      setSpinning(false);
       console.log(error);
     });
 
@@ -217,6 +220,7 @@ const TableComponent = ({ element }) => {
         }}
         size="large"
       />
+      <Spin spinning={spinning} fullscreen />
     </ConfigProvider>
   );
 };

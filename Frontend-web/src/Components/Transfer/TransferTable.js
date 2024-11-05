@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from "react-router-dom";
-import { Table, Input, InputNumber, Space, Form, Button, Row, Col, Modal, message, notification } from 'antd';
-import { stringify } from 'ajv';
-import Paragraph from 'antd/es/skeleton/Paragraph';
-import { calc } from 'antd/es/theme/internal';
+import { useNavigate } from "react-router-dom";
+import { Table, Input, InputNumber, Form, Button, Row, Col, Modal, message, Spin } from 'antd';
 import { Axios } from '../Axios';
 
 const { TextArea } = Input;
@@ -80,6 +77,8 @@ const Details = ({ item }) => {
     const [ispratnicaBroj, setispratnicaBroj] = useState("");
     const [voziloBroj, setVoziloBroj] = useState("");
     const [tableInit, setTableInit] = useState(false);
+    const [spinning, setSpinning] = useState(false);
+    
 
     const formatNumber = (number) => {
         if (isNaN(number)) return number;
@@ -225,6 +224,8 @@ const Details = ({ item }) => {
       }
       const axios = new Axios();
 
+      setSpinning(true);
+
       const transfer_data = previewData.map(item => {
         return Object.fromEntries(
             Object.entries(item).map(([key, value]) => [key, value.toString()])
@@ -245,6 +246,13 @@ const Details = ({ item }) => {
           if (response.status === 200){
             setOpen(false);
             message.success('Success!');
+            localStorage.removeItem('tabsClass');
+            localStorage.removeItem('transferClass');
+            localStorage.removeItem('colsTransfer');
+            localStorage.removeItem('colsTabs');
+            localStorage.removeItem('colsList');
+            localStorage.removeItem('current_table');
+            localStorage.removeItem('doShowTotal');
             setTimeout( () => {
               navigate('/menu');
             }, 1000)
@@ -255,7 +263,7 @@ const Details = ({ item }) => {
           message.error('Something went wrong! Please try again.');
           window.history.go(-1);
           console.log(error);
-        });
+        }).finally( () => setSpinning(false) );
     }
 
     const handleOnCancelModal = () => {
@@ -463,6 +471,7 @@ const Details = ({ item }) => {
       Vo slu~aj na spor nadle`en e Osnovniot Sud vo Skopje</p>
 
       </Modal>
+      <Spin spinning={spinning} fullscreen />
       </>
     );
   };

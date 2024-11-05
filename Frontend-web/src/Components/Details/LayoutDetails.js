@@ -46,7 +46,7 @@ const MyList = () => {
   const [tabsDisplay, setTabsDisplay] = useState('block');
   const [data, setData] = useState([]);
   const [listData, setListData] = useState([]);
-  const [spinning, setSpinning] = useState(false);
+  const [spinning, setSpinning] = useState(true);
   const [doShowTotal, setDoShowTotal] = useState("true");
 
   // Restore the saved classes when the component mounts
@@ -219,6 +219,7 @@ const MyList = () => {
     span={listsCol}
     style={style.lists}
   >
+  <Spin spinning={spinning} >
     <List
       itemLayout="vertical"
       size="medium"
@@ -252,6 +253,7 @@ const MyList = () => {
         </List.Item>
       )}
     />
+  </Spin>
   </Col>
 
   <Col 
@@ -273,7 +275,7 @@ const MyList = () => {
     item={selectedItem.length === 1 ? selectedItem : record} 
   />
   </Col>
-  <Spin spinning={spinning} fullscreen />
+  {/* <Spin spinning={spinning} fullscreen /> */}
 </Row>
   );
 };

@@ -28,7 +28,7 @@ export default function App({ element }) {
 
     if (access_token) {
       axios.setAccessToken(access_token);
-      // navigate('/menu');
+      navigate('/menu');
     }
   })
 
@@ -37,7 +37,7 @@ export default function App({ element }) {
       axios.setAccessToken(response.data.access_token);
       const expirationDate = new Date(response.data.valid_to).toUTCString();
       document.cookie = `access_token=${response.data.access_token}; path=/; expires=${expirationDate}; SameSite=Lax; Secure`;
-      // navigate('/menu')
+      navigate('/menu')
     }).catch((error) => {
       console.log(error);
     });

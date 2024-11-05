@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { CaretDownFilled, EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Card, Switch, notification } from 'antd';
 import { Axios } from '../Axios';
 import nipple from '../../images/nipple.png';
@@ -27,6 +27,7 @@ const App = () => {
   const record = location.state?.record || [];
   const [loading, setLoading] = useState(true);
   const isInitialized = React.useRef(false);
+  const [numberOfItems, setnumberOfItems] = useState(0);
 
   const openNotification = (item) => {
     notification.open({
@@ -47,17 +48,30 @@ const App = () => {
         if (succ.status === 401)
           navigate('/');
 
-        console.log(succ);
         setLoading(true);
         if (succ.data.length > 0)
           succ.data.forEach(element => {
             openNotification(element);
           });
+
+          axios.get(`/api/Data/getTableCount?tables=${encodeURIComponent(JSON.stringify(cards))}`)
+          .then( response => {
+            Array.from(response.data).forEach( element => {
+              var tables = Object.keys(element)[1];
+              if (tables != 'key'){
+                document.getElementById(tables).innerHTML = `Total of ${element[tables]}`
+              }
+            })
+          })
+          .catch( error => {
+            console.log(error);
+          })
       }).catch(err =>{
         setLoading(true);
         if (err.status === 401)
           navigate('/');
       }).finally( () => setLoading(false));
+
   }, [navigate])
 
   return (
@@ -80,8 +94,7 @@ const App = () => {
               title={card.title}
               description={
                 <>
-                  <p>This is the description for {card.title}</p>
-                  <p>This is another description</p>
+                  <p id={card.table_name} ></p>
                 </>
               }
             />
